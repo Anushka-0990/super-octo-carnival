@@ -1,0 +1,53 @@
+# 🌧️ Rainfall Prediction using Machine Learning
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+df = pd.read_csv("data/rainfall in india 1901-2015.csv")
+
+# Basic cleanup
+df = df.drop(['SUBDIVISION', 'ANNUAL', 'Jan-Feb', 'Mar-May', 'Jun-Sep', 'Oct-Dec'], axis=1)
+
+# Group by year to get average rainfall across all states
+grouped = df.groupby('YEAR').mean().reset_index()
+
+# Feature and label
+X = grouped[['YEAR']]
+y = grouped.drop('YEAR', axis=1).mean(axis=1)
+
+# Train/Test split
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Model 1: Linear Regression
+from sklearn.linear_model import LinearRegression
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+y_pred_lr = lr.predict(X_test)
+
+# Model 2: Random Forest
+from sklearn.ensemble import RandomForestRegressor
+rf = RandomForestRegressor()
+rf.fit(X_train, y_train)
+y_pred_rf = rf.predict(X_test)
+
+# Evaluation
+from sklearn.metrics import mean_squared_error, r2_score
+
+print("Linear Regression R2:", r2_score(y_test, y_pred_lr))
+print("Random Forest R2:", r2_score(y_test, y_pred_rf))
+
+# Plot results
+plt.figure(figsize=(10,5))
+plt.plot(X_test, y_test, 'o', label='Actual')
+plt.plot(X_test, y_pred_lr, 'r*', label='Linear Predicted')
+plt.plot(X_test, y_pred_rf, 'g^', label='RF Predicted')
+plt.xlabel('Year')
+plt.ylabel('Avg Rainfall (mm)')
+plt.title('Rainfall Prediction')
+plt.legend()
+plt.grid(True)
+plt.show()
