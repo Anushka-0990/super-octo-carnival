@@ -1,0 +1,7 @@
+Dataset Name: Rainfall in India (1901–2015)
+Source: https://www.kaggle.com/datasets/rajanand/rainfall-in-india
+
+Steps:
+1. Download the dataset ZIP from the link above
+2. Extract it and use the file: "rainfall in india 1901-2015.csv"
+3. Save it inside the /data folder
